@@ -12,7 +12,7 @@ class Mic:
     def __init__(self, speaker, passive_stt_engine, active_stt_engine):
         return
 
-    def passiveListen(self, PERSONA):
+    def passiveListen(self, PERSONA, TERMINATE):
         return True, "JASPER"
 
     def activeListenToAllOptions(self, THRESHOLD=None, LISTEN=True,

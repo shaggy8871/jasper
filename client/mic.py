@@ -9,7 +9,6 @@ import audioop
 import pyaudio
 import alteration
 import jasperpath
-import sys
 import time
 
 
@@ -26,7 +25,8 @@ class Mic:
         speaker -- handles platform-independent audio output
         passive_stt_engine -- performs STT while Jasper is in passive listen
                               mode
-        acive_stt_engine -- performs STT while Jasper is in active listen mode
+        active_stt_engine -- performs STT while Jasper is in active listen mode
+        profile -- the user's profile
         """
         self._logger = logging.getLogger(__name__)
         self.speaker = speaker
@@ -88,9 +88,9 @@ class Mic:
 
         return THRESHOLD
 
-    def passiveListen(self, PERSONA):
+    def passiveListen(self, PERSONA, TERMINATE):
         """
-        Listens for PERSONA in everyday sound. Times out after LISTEN_TIME, so
+        Listens for PERSONA or TERMINATE in everyday sound. Times out after LISTEN_TIME, so
         needs to be restarted.
         """
 
@@ -183,8 +183,8 @@ class Mic:
         if any(PERSONA in phrase for phrase in transcribed):
             return (THRESHOLD, PERSONA)
 
-        if any('GOODBYE' in phrase for phrase in transcribed):
-            sys.exit(0)
+        if any(TERMINATE in phrase for phrase in transcribed):
+            return (THRESHOLD, TERMINATE)
 
         return (False, transcribed)
 

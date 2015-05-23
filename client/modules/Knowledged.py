@@ -6,8 +6,8 @@ import time
 import sys
 import string
 from sys import maxint
+from client import friendly, jasperpath
 
-from client import jasperpath
 WORDS = ["WHO", "WHAT", "HOW MUCH", "HOW MANY", "HOW OLD"]
 
 
@@ -15,7 +15,7 @@ def handle(text, mic, profile):
     app_id = profile['keys']['WOLFRAMALPHA']
     client = wolframalpha.Client(app_id)
 
-    mic.say("Let me look that up")
+    friendly.thinking(mic, profile)
 
     query = client.query(text)
 

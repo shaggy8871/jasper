@@ -65,3 +65,10 @@ target/
 
 # SublimeLinter config file
 .sublimelinterrc
+
+cmuclmtk/
+m2m-aligner-1.2/
+mitlm-0.4.1/
+openfst-1.3.3/
+phonetisaurus*/
+sphinxbase-0.8/

@@ -9,7 +9,7 @@ import logging
 import yaml
 import argparse
 
-from client import tts, stt, jasperpath, diagnose
+from client import tts, stt, jasperpath, diagnose, friendly
 from client.conversation import Conversation
 
 # Add jasperpath.LIB_PATH to sys.path
@@ -108,11 +108,10 @@ class Jasper(object):
 
     def run(self):
         if 'first_name' in self.config:
-            salutation = ("Hey %s?"
-                          % self.config["first_name"])
+            friendly.hello(self.mic, self.config)
         else:
             salutation = "How can I be of service?"
-        self.mic.say(salutation)
+            self.mic.say(salutation)
 
         conversation = Conversation("JASPER", self.mic, self.config)
         conversation.handleForever()

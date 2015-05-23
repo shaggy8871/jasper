@@ -1,7 +1,9 @@
 # -*- coding: utf-8-*-
 import logging
+import sys
 from notifier import Notifier
 from brain import Brain
+from client import friendly
 
 
 class Conversation(object):
@@ -26,26 +28,24 @@ class Conversation(object):
             for notif in notifications:
                 self._logger.info("Received notification: '%s'", str(notif))
 
-            """
-            if self.profile['start_active']:
-                # Stays active until stopped
-                input = self.mic.activeListenToAllOptions(32.4)
-
-                if input:
-                    self.brain.query(input)
-                continue
-            """
+            # Word we listen for to self terminate
+            TERMINATE = 'GOODBYE'
 
             self._logger.debug("Started listening for keyword '%s' or '%s'",
-                               self.persona, 'GOODBYE')
-            threshold, transcribed = self.mic.passiveListen(self.persona)
+                               self.persona, TERMINATE)
+            threshold, transcribed = self.mic.passiveListen(self.persona, TERMINATE)
             self._logger.debug("Stopped listening for keyword '%s' or '%s'",
-                               self.persona, 'GOODBYE')
+                               self.persona, TERMINATE)
 
             if not transcribed or not threshold:
                 self._logger.info("Nothing has been said or transcribed.")
                 continue
             self._logger.info("Keyword '%s' has been said!", self.persona)
+
+            # Terminate on goodbye
+            if transcribed == TERMINATE:
+                friendly.goodbye(self.mic, self.profile)
+                sys.exit(0)
 
             self._logger.debug("Started to listen actively with threshold: %r",
                                threshold)
