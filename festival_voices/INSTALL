@@ -1,0 +1,22 @@
+Installation instructions for new voices:
+
+** Note: these voices originated from http://hts.sp.nitech.ac.jp/archives/2.1 but they required patching as outlined in https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=589614
+
+cd ~/jasper/festival_voices
+tar xvf festival_voices.tar.bz2
+
+sudo mkdir -p /usr/share/festival/voices/us
+sudo mv voices/us/* /usr/share/festival/voices/us
+sudo mv hts.scm /usr/share/festival/hts.scm
+rm -r voices/
+
+## Add to /etc/festival.scm (requires sudo)
+
+(set! voice_default 'voice_nitech_us_rms_arctic_hts)
+;;(set! voice_default 'voice_nitech_us_bdl_arctic_hts)
+;;(set! voice_default 'voice_nitech_us_slt_arctic_hts)
+;;(set! voice_default 'voice_nitech_us_clb_arctic_hts)
+;;(set! voice_default 'voice_nitech_us_awb_arctic_hts)
+;;(set! voice_default 'voice_nitech_us_jmk_arctic_hts)
+
+Uncomment each line one at a time to pick your best voice.
