@@ -18,6 +18,8 @@ import wave
 import urllib
 import urlparse
 import requests
+import shutil
+import hashlib
 from abc import ABCMeta, abstractmethod
 
 import argparse
@@ -72,6 +74,22 @@ class AbstractTTSEngine(object):
             output = f.read()
             if output:
                 self._logger.debug("Output was: '%s'", output)
+
+    def say_if_cached(self, phrase):
+        # Check if the file is cached
+        cache_filename = jasperpath.data('cache', '%s.wav' %
+                                         hashlib.md5(phrase).hexdigest())
+        if os.path.isfile(cache_filename):
+            self.play(cache_filename)
+            return True
+        else:
+            return False
+
+    def save_cache(self, phrase, wav):
+        # Save to the cache
+        cache_filename = jasperpath.data('cache', '%s.wav' %
+                                         hashlib.md5(phrase).hexdigest())
+        shutil.copyfile(wav, cache_filename)
 
 
 class AbstractMp3TTSEngine(AbstractTTSEngine):
@@ -213,6 +231,9 @@ class FestivalTTS(AbstractTTSEngine):
 
     def say(self, phrase):
         self._logger.debug("Saying '%s' with '%s'", phrase, self.SLUG)
+        # Check if the phrase is cached
+        if self.say_if_cached(phrase):
+            return
         cmd = ['text2wave']
         with tempfile.NamedTemporaryFile(suffix='.wav') as out_f:
             with tempfile.SpooledTemporaryFile() as in_f:
@@ -228,6 +249,8 @@ class FestivalTTS(AbstractTTSEngine):
                     output = err_f.read()
                     if output:
                         self._logger.debug("Output was: '%s'", output)
+            # Cache the wav file
+            self.save_cache(phrase, out_f.name)
             self.play(out_f.name)
 
 

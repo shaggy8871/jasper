@@ -26,7 +26,6 @@ class Mic:
         passive_stt_engine -- performs STT while Jasper is in passive listen
                               mode
         active_stt_engine -- performs STT while Jasper is in active listen mode
-        profile -- the user's profile
         """
         self._logger = logging.getLogger(__name__)
         self.speaker = speaker
